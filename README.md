@@ -11,4 +11,5 @@ W zasadzie nie spotyka się układów takich jak ten, który zbuduję (choć tak
 
 ## Porównanie cen i jakości
 Niestety dostępne na rynku, przeciętne rozwiązania są niewystarczające dla zastosowania w przypadku ostrzy wolframowych. Zasilacze labolatoryjne w cenie kilkuset złotych są dość niedokładne i znacznie wychodzą poza zakres używanych napieć i prądu, co dodatkowo obniża ich sprawność. Brakuje im też wyjścia z prądem zmiennym, a te które by je posiadały (de facto generatory funkcyjne) są wykonane jeszcze gorzej, przy tym budżecie, ze względu na ilość możliwych do wygenerowania syngałów. Z drugiej strony zakup porządnego urządzenia to koszt przynajmniej kilku tysiecy złotych, a potencjał byłby niewykorzystany.
-M
+
+Moje rozwiązanie pozwoli na przystępną cenę - szacuję, że nie powinno być to więcej niż 500 zł - przy ograniczeniu się do tych parametrów, które mogą być wykorzystane w laboratorium, co umożliwi lepszą kontrolę oraz większą precyzję.
