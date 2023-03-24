@@ -1,6 +1,6 @@
 # Lab Power Supply
 # Opis
-Projekt ma na celu stworzenie funkcjonalnego zasilacza labolatoryjnego z wykorzystaniem źródła prądowego i platformy Arduino. Dostarczany prąd będzie ograniczony do kilkuset mA, a napięcie do 12 V. Chciałbym osiągnąć jak największą stabilność i dokładność (zadowalające byłyby części dziesięne mA i setne V). Zasilacz ma być wielosystemowy - prąd stały oraz prostokątny przebieg prądu zmiennego. Dodatkowym atrybutem będzie aplikacja mobilna, z której planuję umożliwić odczyt teraźniejszych danych, zapis serii, a także zadanie wartości do układu. Zasilanie samego mikrokontrolera oraz reszty komponentów prawdopodobnie zostanie dostarczone z zasilacza komputerowego.
+Projekt ma na celu stworzenie funkcjonalnego zasilacza labolatoryjnego w celu lepszej kontroli nad trawieniem ostrzy wolframowych z wykorzystaniem źródła prądowego i platformy Arduino. Dostarczany prąd będzie ograniczony do kilkuset mA, a napięcie do 12 V. Chciałbym osiągnąć jak największą stabilność i dokładność (zadowalające byłyby części dziesięne mA i setne V). Zasilacz ma być wielosystemowy - prąd stały oraz prostokątny przebieg prądu zmiennego. Dodatkowym atrybutem będzie aplikacja mobilna, z której planuję umożliwić odczyt teraźniejszych danych, zapis serii, a także zadanie wartości do układu. Zasilanie samego mikrokontrolera oraz reszty komponentów prawdopodobnie zostanie dostarczone z zasilacza komputerowego.
 
 # Analiza rozwiązań rynkowych
 ## Zasilanie układu
@@ -8,3 +8,7 @@ Większość układów przyjmuje prąd zmienny na wejście, a następnie go konw
 
 ## Generowanie sygnału
 W zasadzie nie spotyka się układów takich jak ten, który zbuduję (choć takie istnieją), czyli o pojedynczym wyjściu dc oraz ac. Raczej jest to, albo samo wyjście prądu stałego, albo cały generator funkcyjny. Generalnie to co otrzymamy na wyjście jest tworzone przez ostatnią część układu. Odpowiednie ustawienie tranzystorów, bądź wzmacniacz operacyjny lub pozwolą nam na otrzymanie przebiegu stałego. Zaś w przypadku zmiennego mogą być również wykorzystane wzmacniacze w serii, bądź odpowiednia kompozycja integratora, komparatora i diod. Wzmacniacze mogą też być umieszczone wewnątrz układu scalonego i obecenie najczęściej takie są wykorzystywane.
+
+## Porównanie cen i jakości
+Niestety dostępne na rynku, przeciętne rozwiązania są niewystarczające dla zastosowania w przypadku ostrzy wolframowych. Zasilacze labolatoryjne w cenie kilkuset złotych są dość niedokładne i znacznie wychodzą poza zakres używanych napieć i prądu, co dodatkowo obniża ich sprawność. Brakuje im też wyjścia z prądem zmiennym, a te które by je posiadały (de facto generatory funkcyjne) są wykonane jeszcze gorzej, przy tym budżecie, ze względu na ilość możliwych do wygenerowania syngałów. Z drugiej strony zakup porządnego urządzenia to koszt przynajmniej kilku tysiecy złotych, a potencjał byłby niewykorzystany.
+M
