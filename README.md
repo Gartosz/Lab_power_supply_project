@@ -19,13 +19,12 @@ Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fi
 
 # Plan działania
 1. Zapoznanie się i przetestowanie poszczególnych elementów.
-2. Rozpoczęcie pisania aplikacji.
+2. Utworzenie podstawowego wyglądu aplikacji.
 3. Sprawdzenie jakości (stabilności) przekazywanego przez zasilacz prądu.
-4. Utworzenie podstawowego wyglądu aplikacji.
-5. Stworzenie źródła prądowego.
-6. Połączenie Bluetooth i odbiór danych.
-7. Dodanie sygnału prostokątnego.
-8. Kontrola ustawień Arduino z aplikacji.
+4. Stworzenie źródła prądowego.
+5. Połączenie Bluetooth i odbiór danych.
+6. Dodanie sygnału prostokątnego.
+7. Kontrola ustawień Arduino z aplikacji.
 
 # Rozwiązania, które chcę wykorzystać
 * W celu stworzenia źródła prądowego będę musiał ciągle wykonywać pomiar natężenia na wyjściu układu i przekazywać go do mikrokontrolera, a następnie dostosowywać wartość obciążenie rezystora w dzielniku napięcia.
