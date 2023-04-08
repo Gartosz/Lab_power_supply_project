@@ -22,13 +22,13 @@ Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fi
 # Możliwe rozwiązania do wdrożenia
 
 # Znane potrzebne komponenty
-Mikrokontroler Arduino
-Moduł Bluetooth
-Kable
-Zasilacz (np. komputerowy) z wyjściami 5V i 12V
-Podstawowe elementy elektroniczne
-Potencjometry/rezystory sterowane
-Wzmaczniacz
-Diody LED
+- Mikrokontroler Arduino
+- Moduł Bluetooth
+- Kable
+- Zasilacz (np. komputerowy) z wyjściami 5V i 12V
+- Podstawowe elementy elektroniczne
+- Potencjometry/rezystory sterowane
+- Wzmaczniacz
+- Diody LED
 
 # Schematy
