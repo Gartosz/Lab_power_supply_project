@@ -18,6 +18,14 @@ Moje rozwiązanie pozwoli na przystępną cenę - szacuję, że nie powinno być
 Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fizycznie na zasilaczu (jak to ma miejsce w każdym z rozwiązań rynkowych) i możliwe, że panel z cyframi w celu dokładnego podania wartości. Te opcje ma też docelowo zapewniać aplikacja z komunikacją bezprzewodową i prawdopodobnie przewodową. O ile klasyczne sterowanie, czy nawet takie bardziej zaawansowane jest czym normalnym, tak dostęp z aplikacji na smartfonie/komputerze już nie. Tak naprawdę znalazłem 1 model, który posiadałby ten atrybut, a moim zdaniem jest on dość przydatny. Najczęsciej, jeśli już jest, to istnieje sama możliwość dostępu np. przez usb czy Bluetooth i komunikacja szeregowa po jednym z dostępnych protokołów.
 
 # Plan działania
+1. Zapoznanie się i przetestowanie poszczególnych elementów.
+2. Rozpoczęcie pisania aplikacji.
+3. Sprawdzenie jakości (stabilności) przekazywanego przez zasilacz prądu.
+4. Utworzenie podstawowego wyglądu aplikacji.
+5. Stworzenie źródła prądowego.
+6. Połączenie Bluetooth i odbiór danych.
+7. Dodanie sygnału prostokątnego.
+8. Kontrola ustawień Arduino z aplikacji.
 
 # Możliwe rozwiązania do wdrożenia
 
@@ -28,7 +36,5 @@ Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fi
 - Zasilacz (np. komputerowy) z wyjściami 5V i 12V
 - Podstawowe elementy elektroniczne
 - Potencjometry/rezystory sterowane
-- Wzmaczniacz
+- Wzmaczniacze operacyjne
 - Diody LED
-
-# Schematy
