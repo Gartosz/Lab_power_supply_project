@@ -16,3 +16,9 @@ Moje rozwiązanie pozwoli na przystępną cenę - szacuję, że nie powinno być
 
 ## Sterowanie
 Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fizycznie na zasilaczu (jak to ma miejsce w każdym z rozwiązań rynkowych) i możliwe, że panel z cyframi w celu dokładnego podania wartości. Te opcje ma też docelowo zapewniać aplikacja z komunikacją bezprzewodową i prawdopodobnie przewodową. O ile klasyczne sterowanie, czy nawet takie bardziej zaawansowane jest czym normalnym, tak dostęp z aplikacji na smartfonie/komputerze już nie. Tak naprawdę znalazłem 1 model, który posiadałby ten atrybut, a moim zdaniem jest on dość przydatny. Najczęsciej, jeśli już jest, to istnieje sama możliwość dostępu np. przez usb czy Bluetooth i komunikacja szeregowa po jednym z dostępnych protokołów.
+
+# Plan działania
+
+# Możliwe rozwiązania do wdrożenia
+
+# Schematy
