@@ -27,7 +27,11 @@ Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fi
 7. Dodanie sygnału prostokątnego.
 8. Kontrola ustawień Arduino z aplikacji.
 
-# Możliwe rozwiązania do wdrożenia
+# Rozwiązania, które chcę wykorzystać
+* W celu stworzenia źródła prądowego będę musiał ciągle wykonywać pomiar natężenia na wyjściu układu i przekazywać go do mikrokontrolera, a następnie dostosowywać wartość obciążenie rezystora w dzielniku napięcia.
+* Do uzyskania sygnału prostokątnego spróbuję wykorzystać oscylator z mikrokontrolera i za pomocą kodu storzyć odpowiednią falę. Jeśli nie będzie ona posiadać w pełni pożądanego kształtu zdecyduję się na wykorzystanie zewnętrznego osyclatora, bądź innego rozwiązania.
+* Oba sygnały będą wykorzystywały wzmacniacze operacyjne, w celu uzyskania napięcia do 12 volt.
+* Pomiar natężenia mogę wykonać na samym Arduino (o ile będzie się dało wykonać to sensownie z potrzebnym zakresem) lub za pomocą zewnętrznego układu (np. INAxxx) i pewnie to drugie rozwiązabue zostanie wdrożone.
 
 # Znane potrzebne komponenty
 - Mikrokontroler Arduino
@@ -38,3 +42,7 @@ Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fi
 - Potencjometry/rezystory sterowane
 - Wzmaczniacze operacyjne
 - Diody LED
+
+# Źródła do zaobserwowanych projektów
+* [Arduino Controlled Power Constant Current Source](https://www.bristolwatch.com/ele4/ard_css.htm)
+* [Constant Voltage or Current Supply with ARDUINO](https://www.youtube.com/watch?v=rwqY0rYPlVE)
