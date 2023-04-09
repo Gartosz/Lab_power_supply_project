@@ -32,6 +32,12 @@ Planuję umieścić pokrętło sterowania napięciem oraz maksymalnym prądem fi
 * Oba sygnały będą wykorzystywały wzmacniacze operacyjne, w celu uzyskania napięcia do 12 volt.
 * Pomiar natężenia mogę wykonać na samym Arduino (o ile będzie się dało wykonać to sensownie z potrzebnym zakresem) lub za pomocą zewnętrznego układu (np. INAxxx) i pewnie to drugie rozwiązabue zostanie wdrożone.
 
+# Oprogramowanie
+- Arduino IDE
+- C++
+- Android Studio
+- Kotlin
+
 # Potrzebne komponenty znane na moment tworzenia tej dokumentacji
 - Mikrokontroler Arduino
 - Moduł Bluetooth
