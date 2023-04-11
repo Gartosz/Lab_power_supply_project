@@ -1,4 +1,6 @@
 package com.example.lab_supply_app.fragments
 
-class RWFragment {
+import androidx.fragment.app.Fragment
+
+class RWFragment : Fragment() {
 }
