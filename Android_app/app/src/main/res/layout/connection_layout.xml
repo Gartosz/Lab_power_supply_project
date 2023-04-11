@@ -39,4 +39,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connectionStatus" />
+
+    <Switch
+        android:id="@+id/bluetooth"
+        android:layout_width="156dp"
+        android:layout_height="58dp"
+        android:text="Bluetooth"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bluetoothDevices" />
 </androidx.constraintlayout.widget.ConstraintLayout>
