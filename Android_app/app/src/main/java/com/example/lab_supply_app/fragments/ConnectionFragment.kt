@@ -1,5 +1,8 @@
 package com.example.lab_supply_app.fragments
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +14,8 @@ import com.example.lab_supply_app.models.ConnectionsViewModel
 
 class ConnectionFragment : Fragment() {
     private lateinit var binding: ConnectionLayoutBinding
-    private val cocktailViewModel: ConnectionsViewModel by viewModels()
+    private val connectionViewModel: ConnectionsViewModel by viewModels()
+    private lateinit var bluetoothAdapter : BluetoothAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
