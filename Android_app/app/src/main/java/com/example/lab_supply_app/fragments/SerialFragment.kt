@@ -11,7 +11,7 @@ import com.example.lab_supply_app.models.SerialViewModel
 
 class SerialFragment : Fragment() {
     private lateinit var binding: SerialReadoutLayoutBinding
-    private val cocktailViewModel: SerialViewModel by viewModels()
+    private val serialViewModel: SerialViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

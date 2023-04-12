@@ -11,7 +11,7 @@ import com.example.lab_supply_app.models.RWViewModel
 
 class RWFragment : Fragment() {
     private lateinit var binding: RwValuesLayoutBinding
-    private val cocktailViewModel: RWViewModel by viewModels()
+    private val RWViewModel: RWViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
