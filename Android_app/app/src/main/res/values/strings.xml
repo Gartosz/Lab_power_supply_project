@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Lab_supply_app</string>
+    <string name="readWrite"><![CDATA[Set & read data]]></string>
+    <string name="serial">Serial readout</string>
+    <string name="connection">Connect to device</string>
 </resources>
