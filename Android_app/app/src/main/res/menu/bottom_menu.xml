@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/connectionFragment"
+        android:title="@string/connection"
+        />
+    <item
+        android:id="@+id/readWriteFragment"
+        android:title="@string/readWrite"
+        />
+    <item
+        android:id="@+id/serialViewFragment"
+        android:title="@string/serial"
+        />
+</menu>
