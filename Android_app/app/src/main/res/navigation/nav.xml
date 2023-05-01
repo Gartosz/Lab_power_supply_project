@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/connectionFragment">
+
+    <fragment
+        android:id="@+id/connectionFragment"
+        android:name="com.example.lab_supply_app.fragments.ConnectionFragment"
+        android:label="connection"
+        tools:layout="@layout/connection_layout" />
+    <fragment
+        android:id="@+id/readWriteFragment"
+        android:name="com.example.lab_supply_app.fragments.RWFragment"
+        android:label="readWrite"
+        tools:layout="@layout/rw_values_layout" />
+    <fragment
+        android:id="@+id/serialViewFragment"
+        android:name="com.example.lab_supply_app.fragments.SerialFragment"
+        android:label="serial"
+        tools:layout="@layout/serial_readout_layout" />
+</navigation>
