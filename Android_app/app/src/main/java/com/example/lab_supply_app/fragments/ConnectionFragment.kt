@@ -4,6 +4,7 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,8 +25,18 @@ class ConnectionFragment : Fragment() {
     private lateinit var binding: ConnectionLayoutBinding
     private val connectionViewModel: ConnectionsViewModel by viewModels()
     private lateinit var bluetoothAdapter : BluetoothAdapter
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
-
+    @RequiresApi(Build.VERSION_CODES.S)
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+    private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            binding.bluetooth.visibility = View.INVISIBLE
+        }else{
+            Toast.makeText(binding.root.context,
+                "Bluetooth is required to be able to connect with arduino module.",
+                Toast.LENGTH_LONG).show()
+            binding.bluetooth.isChecked = false
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +48,7 @@ class ConnectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        @RequiresApi(Build.VERSION_CODES.S)
         requestPermissionLauncher =
             registerForActivityResult(
                 ActivityResultContracts.RequestPermission()
