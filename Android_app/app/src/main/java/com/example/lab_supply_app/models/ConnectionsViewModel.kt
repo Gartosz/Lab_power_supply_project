@@ -3,11 +3,10 @@ package com.example.lab_supply_app.models
 import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
+import androidx.lifecycle.MutableLiveData
 
 class ConnectionsViewModel(application: Application) : AndroidViewModel(application) {
-    lateinit var bluetoothState : LiveData<Boolean>
+    val bluetoothState : MutableLiveData<Boolean> by lazy { MutableLiveData<Boolean>() }
 
     fun setBTState(bluetoothAdapter: BluetoothAdapter)
     {
