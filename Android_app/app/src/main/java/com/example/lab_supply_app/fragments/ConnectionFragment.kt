@@ -57,6 +57,8 @@ class ConnectionFragment : Fragment() {
         }
     }
 
+    private fun showBLEDevices()
+    {
 
 
 }
