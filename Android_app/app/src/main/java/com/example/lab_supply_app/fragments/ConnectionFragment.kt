@@ -49,6 +49,9 @@ class ConnectionFragment : Fragment() {
             }
         requestPermission(Manifest.permission.BLUETOOTH_SCAN)
         requestPermission(Manifest.permission.BLUETOOTH_CONNECT)
+        binding.bluetoothDevices.setOnClickListener{
+            showBLEDevices()
+        }
         val bluetoothManager: BluetoothManager = ContextCompat.getSystemService(binding.root.context, BluetoothManager::class.java)!!
         bluetoothAdapter = bluetoothManager.adapter
         val stateObserver = Observer<Boolean> { newState ->
