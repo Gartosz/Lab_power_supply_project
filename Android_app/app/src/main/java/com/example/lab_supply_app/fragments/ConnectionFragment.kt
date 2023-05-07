@@ -76,8 +76,7 @@ class ConnectionFragment : Fragment() {
                     }
                 }
             }
-        requestPermission(Manifest.permission.BLUETOOTH_SCAN)
-        requestPermission(Manifest.permission.BLUETOOTH_CONNECT)
+        setBluetooth(true)
         binding.bluetoothDevices.setOnClickListener{
             showBLEDevices()
         }
@@ -89,6 +88,19 @@ class ConnectionFragment : Fragment() {
         }
         connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
         connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
+        binding.bluetooth.setOnCheckedChangeListener { _, isChecked ->
+            setBluetooth(isChecked)
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
+    }
+
+    override fun onResume() {
+        super.onResume()
+        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
     }
 
     private fun checkPermissions(permissions: MutableList<String>)
