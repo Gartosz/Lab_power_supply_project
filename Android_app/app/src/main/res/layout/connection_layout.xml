@@ -9,7 +9,7 @@
         android:id="@+id/bluetoothDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="472dp"
+        android:layout_marginBottom="380dp"
         android:text="Show devices"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.041" />
 
     <TextView
         android:id="@+id/deviceName"
@@ -36,38 +36,47 @@
         android:text=""
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/bluetoothDevices"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/isArduino"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connectionStatus" />
+        app:layout_constraintTop_toBottomOf="@+id/connectionStatus"
+        app:layout_constraintVertical_bias="0.187" />
+
+    <TextView
+        android:id="@+id/isArduino"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="32dp"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/bluetoothDevices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toEndOf="@id/deviceName"
+        app:layout_constraintTop_toBottomOf="@+id/connectionStatus"
+        app:layout_constraintVertical_bias="0.229" />
+
 
     <com.google.android.material.chip.Chip
         android:id="@+id/bluetooth"
         android:layout_width="156dp"
         android:layout_height="58dp"
+        android:layout_marginBottom="10dp"
         android:text="Request Bluetooth"
-        app:layout_constraintBottom_toTopOf="@+id/isArduino"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluetoothDevices" />
-
-    <TextView
-        android:id="@+id/isArduino"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/pairedDevices"
+        app:layout_constraintBottom_toTopOf="@+id/bluetoothDevices"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deviceName"
+        app:layout_constraintVertical_bias="0.573" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/pairedDevices"
+        android:id="@+id/availableDevices"
         android:layout_width="374dp"
         android:layout_height="251dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.567"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bluetoothDevices"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
