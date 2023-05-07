@@ -1,8 +1,10 @@
 package com.example.lab_supply_app.fragments
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -79,7 +81,8 @@ class ConnectionFragment : Fragment() {
         binding.bluetoothDevices.setOnClickListener{
             showBLEDevices()
         }
-        val bluetoothManager: BluetoothManager = ContextCompat.getSystemService(binding.root.context, BluetoothManager::class.java)!!
+        val bluetoothManager: BluetoothManager = binding.root.context.applicationContext.
+        getSystemService(BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager.adapter
         val stateObserver = Observer<Boolean> { newState ->
             binding.bluetooth.isChecked = newState
@@ -121,6 +124,23 @@ class ConnectionFragment : Fragment() {
     private fun showBLEDevices()
     {
 
+    }
+
+    private fun setBluetooth(isChecked: Boolean)
+    {
+        if (isChecked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        {
+            if(requestPermissions(
+                mutableListOf(Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT)
+            ))
+                binding.bluetooth.visibility = View.INVISIBLE
+        }
+        else if (isChecked)
+        {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            requestBluetooth.launch(enableBtIntent)
+        }
     }
 
 }
