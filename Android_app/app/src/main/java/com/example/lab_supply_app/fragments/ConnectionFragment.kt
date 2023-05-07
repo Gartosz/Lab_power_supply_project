@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.lab_supply_app.databinding.ConnectionLayoutBinding
 import com.example.lab_supply_app.models.ConnectionsViewModel
 
@@ -48,7 +49,14 @@ class ConnectionFragment : Fragment() {
             }
         requestPermission(Manifest.permission.BLUETOOTH_SCAN)
         requestPermission(Manifest.permission.BLUETOOTH_CONNECT)
+        val bluetoothManager: BluetoothManager = ContextCompat.getSystemService(binding.root.context, BluetoothManager::class.java)!!
+        bluetoothAdapter = bluetoothManager.adapter
+        val stateObserver = Observer<Boolean> { newState ->
+            binding.bluetooth.isChecked = newState
         }
+        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
+        connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
+    }
 
     private fun requestPermission(permission: String)
     {
