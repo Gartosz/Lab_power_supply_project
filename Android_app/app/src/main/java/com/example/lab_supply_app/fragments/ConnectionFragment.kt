@@ -41,6 +41,7 @@ class ConnectionFragment : Fragment() {
         }
     }
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
+    private var scanning = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,7 +81,10 @@ class ConnectionFragment : Fragment() {
             }
         setBluetooth(true)
         binding.bluetoothDevices.setOnClickListener{
-            showBLEDevices()
+            if (scanning)
+                turnScanningOff()
+            else
+                showBLEDevices()
         }
         val bluetoothManager: BluetoothManager = binding.root.context.applicationContext.
         getSystemService(BluetoothManager::class.java)
@@ -141,6 +145,11 @@ class ConnectionFragment : Fragment() {
     }
 
     private fun showBLEDevices()
+    {
+
+    }
+
+    private fun turnScanningOff()
     {
 
     }
