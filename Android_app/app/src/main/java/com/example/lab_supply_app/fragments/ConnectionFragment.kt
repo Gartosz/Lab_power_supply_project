@@ -85,6 +85,10 @@ class ConnectionFragment : Fragment() {
         bluetoothAdapter = bluetoothManager.adapter
         val stateObserver = Observer<Boolean> { newState ->
             binding.bluetooth.isChecked = newState
+            if (!newState)
+                binding.bluetooth.visibility = View.VISIBLE
+            else
+                binding.bluetooth.visibility = View.INVISIBLE
         }
         connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
         connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
