@@ -51,14 +51,27 @@ class ConnectionFragment : Fragment() {
         @RequiresApi(Build.VERSION_CODES.S)
         requestPermissionLauncher =
             registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (isGranted) {
-                    // Permission is granted. Continue the action or workflow in your
-                    // app.
-                } else {
-                    Toast.makeText(binding.root.context, "Wymagane jest przyznanie uprawnień " +
-                            "do połączenia i skanowania Bluetooth.", Toast.LENGTH_LONG).show()
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissions -> permissions.entries.forEach{
+                    val isGranted = it.value
+                    val permission = it.key
+                    if(!isGranted) {
+                        val neverAskAgain = !ActivityCompat.shouldShowRequestPermissionRationale(
+                            requireActivity(),
+                            permission
+                        )
+                        if (neverAskAgain) {
+                            //user click "never ask again"
+                        } else {
+                            //show explain dialog
+                        }
+
+                        Toast.makeText(
+                            binding.root.context, "Wymagane jest przyznanie uprawnień " +
+                                    "do połączenia i skanowania Bluetooth.", Toast.LENGTH_LONG
+                        ).show()
+                        return@registerForActivityResult
+                    }
                 }
             }
         requestPermission(Manifest.permission.BLUETOOTH_SCAN)
@@ -75,32 +88,34 @@ class ConnectionFragment : Fragment() {
         connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
     }
 
-    private fun requestPermission(permission: String)
+    private fun checkPermissions(permissions: MutableList<String>)
     {
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(
-                binding.root.context,
-                permission
-            ) -> {
-                // You can use the API that requires the permission.
-            }
-            //            shouldShowRequestPermissionRationale() -> {
-            // In an educational UI, explain to the user why your app requires this
-            // permission for a specific feature to behave as expected, and what
-            // features are disabled if it's declined. In this UI, include a
-            // "cancel" or "no thanks" button that lets the user continue
-            // using your app without granting the permission.
-            //            showInContextUI()
-            //        }
-            else -> {
-                Toast.makeText(binding.root.context, "Wymagane jest przyznanie uprawnień " +
-                        "do połączenia i skanowania Bluetooth.", Toast.LENGTH_LONG).show()
-                requestPermissionLauncher.launch(
-                    permission
-
-                )
+        permissions.forEachIndexed { index, element ->
+            when (PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(
+                    binding.root.context,
+                    element
+                ) -> {
+                    permissions.removeAt(index)
+                }
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun requestPermissions(permissions: MutableList<String>) : Boolean {
+        checkPermissions(permissions)
+        if (permissions.isNotEmpty()) {
+            Toast.makeText(
+                binding.root.context, "Wymagane jest przyznanie uprawnień " +
+                        "do połączenia i skanowania Bluetooth.", Toast.LENGTH_LONG
+            ).show()
+            requestPermissionLauncher.launch(
+                permissions.toTypedArray()
+            )
+            checkPermissions(permissions)
+        }
+        return permissions.isEmpty()
     }
 
     private fun showBLEDevices()
