@@ -27,5 +27,36 @@ class ConnectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        }
+
+    private fun requestPermission(permission: String)
+    {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                binding.root.context,
+                permission
+            ) -> {
+                // You can use the API that requires the permission.
+            }
+            //            shouldShowRequestPermissionRationale() -> {
+            // In an educational UI, explain to the user why your app requires this
+            // permission for a specific feature to behave as expected, and what
+            // features are disabled if it's declined. In this UI, include a
+            // "cancel" or "no thanks" button that lets the user continue
+            // using your app without granting the permission.
+            //            showInContextUI()
+            //        }
+            else -> {
+                Toast.makeText(binding.root.context, "Wymagane jest przyznanie uprawnień " +
+                        "do połączenia i skanowania Bluetooth.", Toast.LENGTH_LONG).show()
+                requestPermissionLauncher.launch(
+                    permission
+
+                )
+            }
+        }
     }
+
+
+
 }
