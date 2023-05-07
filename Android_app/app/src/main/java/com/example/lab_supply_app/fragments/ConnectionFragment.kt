@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.bluetooth.le.BluetoothLeScanner
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -26,7 +27,7 @@ import com.example.lab_supply_app.models.ConnectionsViewModel
 class ConnectionFragment : Fragment() {
     private lateinit var binding: ConnectionLayoutBinding
     private val connectionViewModel: ConnectionsViewModel by viewModels()
-    private lateinit var bluetoothAdapter : BluetoothAdapter
+    private lateinit var bluetoothAdapter: BluetoothAdapter
     @RequiresApi(Build.VERSION_CODES.S)
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
     private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -39,6 +40,7 @@ class ConnectionFragment : Fragment() {
             binding.bluetooth.isChecked = false
         }
     }
+    private lateinit var bluetoothLeScanner: BluetoothLeScanner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,6 +97,7 @@ class ConnectionFragment : Fragment() {
         binding.bluetooth.setOnCheckedChangeListener { _, isChecked ->
             setBluetooth(isChecked)
         }
+        bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
