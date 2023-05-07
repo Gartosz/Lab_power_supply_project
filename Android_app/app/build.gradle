@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace 'com.example.lab_supply_app'
-    compileSdk 33
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.lab_supply_app"
-        minSdk 33
-        targetSdk 33
+        minSdk 29
+        targetSdk 31
         versionCode 1
         versionName "1.0"
 
