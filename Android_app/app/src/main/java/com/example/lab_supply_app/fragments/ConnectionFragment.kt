@@ -1,6 +1,7 @@
 package com.example.lab_supply_app.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -21,6 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.lab_supply_app.bluetooth.BleDevicesAdapter
+import com.example.lab_supply_app.bluetooth.BleScanCallback
 import com.example.lab_supply_app.databinding.ConnectionLayoutBinding
 import com.example.lab_supply_app.models.ConnectionsViewModel
 
@@ -35,13 +38,18 @@ class ConnectionFragment : Fragment() {
             binding.bluetooth.visibility = View.INVISIBLE
         }else{
             Toast.makeText(binding.root.context,
-                "Bluetooth is required to be able to connect with arduino module.",
+                "Wymagane jest przyznanie uprawnień " +
+                        "do połączenia i skanowania Bluetooth.",
                 Toast.LENGTH_LONG).show()
             binding.bluetooth.isChecked = false
         }
     }
-    private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private var scanning = false
+    private val bleScanCallback = BleScanCallback()
+    private lateinit var bluetoothLeScanner : BluetoothLeScanner
+    @RequiresApi(Build.VERSION_CODES.S)
+    private val requiredPermissions = listOf(Manifest.permission.BLUETOOTH_SCAN,
+        Manifest.permission.BLUETOOTH_CONNECT)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,41 +61,7 @@ class ConnectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        @RequiresApi(Build.VERSION_CODES.S)
-        requestPermissionLauncher =
-            registerForActivityResult(
-                ActivityResultContracts.RequestMultiplePermissions()
-            ) { permissions -> permissions.entries.forEach{
-                    val isGranted = it.value
-                    val permission = it.key
-                    if(!isGranted) {
-                        val neverAskAgain = !ActivityCompat.shouldShowRequestPermissionRationale(
-                            requireActivity(),
-                            permission
-                        )
-                        if (neverAskAgain) {
-                            //user click "never ask again"
-                        } else {
-                            //show explain dialog
-                        }
-
-                        Toast.makeText(
-                            binding.root.context, "Wymagane jest przyznanie uprawnień " +
-                                    "do połączenia i skanowania Bluetooth.", Toast.LENGTH_LONG
-                        ).show()
-                        return@registerForActivityResult
-                    }
-                }
-            }
-        setBluetooth(true)
-        binding.bluetoothDevices.setOnClickListener{
-            if (scanning)
-                turnScanningOff()
-            else
-                showBLEDevices()
-        }
-        val bluetoothManager: BluetoothManager = binding.root.context.applicationContext.
-        getSystemService(BluetoothManager::class.java)
+        val bluetoothManager: BluetoothManager = binding.root.context.applicationContext.getSystemService(BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager.adapter
         val stateObserver = Observer<Boolean> { newState ->
             binding.bluetooth.isChecked = newState
@@ -99,9 +73,31 @@ class ConnectionFragment : Fragment() {
         connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
         connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
         binding.bluetooth.setOnCheckedChangeListener { _, isChecked ->
-            setBluetooth(isChecked)
+            setBluetooth(!isChecked)
         }
-        bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
+        @RequiresApi(Build.VERSION_CODES.S)
+        requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissions -> permissions.entries.forEach{
+                val isGranted = it.value
+                val permission = it.key
+                if(!isGranted) {
+                    Toast.makeText(
+                        binding.root.context, "Wymagany jest dostep do " + permission, Toast.LENGTH_LONG
+                    ).show()
+
+                }
+            }
+
+        }
+        setBluetooth(true)
+        binding.bluetoothDevices.setOnClickListener{
+            if (scanning)
+                turnScanningOff()
+            else
+                showBLEDevices()
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -144,9 +140,17 @@ class ConnectionFragment : Fragment() {
         return permissions.isEmpty()
     }
 
+    @SuppressLint("MissingPermission")
     private fun showBLEDevices()
     {
-
+        if(setBluetooth(true))
+        {
+            bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
+            if (!scanning) {
+                bluetoothLeScanner.startScan(bleScanCallback)
+                scanning = true
+            }
+        }
     }
 
     private fun turnScanningOff()
@@ -154,21 +158,24 @@ class ConnectionFragment : Fragment() {
 
     }
 
-    private fun setBluetooth(isChecked: Boolean)
+    private fun setBluetooth(isChecked: Boolean) : Boolean
     {
+        println("guzior" + isChecked)
+
         if (isChecked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
         {
-            if(requestPermissions(
-                mutableListOf(Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT)
-            ))
+            var permissions = requiredPermissions.toMutableList()
+            if(requestPermissions(permissions))
                 binding.bluetooth.visibility = View.INVISIBLE
+            return permissions.isEmpty()
         }
-        else if (isChecked)
+        if (isChecked)
         {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             requestBluetooth.launch(enableBtIntent)
+            return bluetoothAdapter.isEnabled
         }
+        return false
     }
 
 }
