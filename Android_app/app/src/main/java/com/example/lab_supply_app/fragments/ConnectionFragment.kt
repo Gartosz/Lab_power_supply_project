@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -176,21 +177,21 @@ class ConnectionFragment : Fragment() {
 
     }
 
-    private fun setBluetooth(isChecked: Boolean)
+    private fun setBluetooth() : Boolean
     {
-        if (isChecked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        {
-            if(requestPermissions(
-                mutableListOf(Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT)
-            ))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val permissions = requiredPermissions.toList().toMutableList()
+            if(requestPermissions(permissions))
                 binding.bluetooth.visibility = View.INVISIBLE
+            if(permissions.isNotEmpty())
+                return permissions.isEmpty()
         }
-        else if (isChecked)
-        {
+        if(!bluetoothAdapter.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             requestBluetooth.launch(enableBtIntent)
+            return bluetoothAdapter.isEnabled
         }
+        return true
     }
 
 }
