@@ -152,6 +152,7 @@ class ConnectionFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.S)
     private fun requestPermissions(permissions: MutableList<String>) : Boolean {
         checkPermissions(permissions)
+        permissionsDeniedPermanently = false
         if (permissions.isNotEmpty()) {
             Toast.makeText(
                 binding.root.context, "Wymagane jest przyznanie uprawnień " +
