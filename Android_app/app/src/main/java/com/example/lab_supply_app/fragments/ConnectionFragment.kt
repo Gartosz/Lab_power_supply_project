@@ -21,6 +21,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.lab_supply_app.R
+import com.example.lab_supply_app.bluetooth.BleDevicesAdapter
+import com.example.lab_supply_app.bluetooth.BleDevicesComparator
+import com.example.lab_supply_app.bluetooth.BleManager
+import com.example.lab_supply_app.bluetooth.BleScanCallback
 import com.example.lab_supply_app.databinding.ConnectionLayoutBinding
 import com.example.lab_supply_app.models.ConnectionsViewModel
 
@@ -41,8 +47,11 @@ class ConnectionFragment : Fragment() {
             binding.bluetooth.isChecked = false
         }
     }
-    private lateinit var bluetoothLeScanner: BluetoothLeScanner
-    private var scanning = false
+    @RequiresApi(Build.VERSION_CODES.S)
+    private val requiredPermissions = listOf(Manifest.permission.BLUETOOTH_SCAN,
+        Manifest.permission.BLUETOOTH_CONNECT)
+    private var permissionsDeniedPermanently = false
+    private lateinit var BLEManager: BleManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
