@@ -134,13 +134,16 @@ class ConnectionFragment : Fragment() {
 
     private fun checkPermissions(permissions: MutableList<String>)
     {
-        permissions.forEachIndexed { index, element ->
+        val iterator = permissions.iterator()
+        while(iterator.hasNext())
+        {
+            val next = iterator.next()
             when (PackageManager.PERMISSION_GRANTED) {
                 ContextCompat.checkSelfPermission(
                     binding.root.context,
-                    element
+                    next
                 ) -> {
-                    permissions.removeAt(index)
+                    iterator.remove()
                 }
             }
         }
