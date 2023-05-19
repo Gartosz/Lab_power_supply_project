@@ -4,11 +4,13 @@ import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.bluetooth.le.BluetoothLeScanner
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +65,29 @@ class ConnectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.bluetoothDevices.text = binding.root.context.resources.getStringArray(R.array.devicesList)[0]
+        val bluetoothManager: BluetoothManager = binding.root.context.applicationContext.
+        getSystemService(BluetoothManager::class.java)
+        bluetoothAdapter = bluetoothManager.adapter
+        val stateObserver = Observer<Boolean> { newState ->
+            binding.bluetooth.isChecked = newState
+            if (!newState)
+                binding.bluetooth.visibility = View.VISIBLE
+            else
+                binding.bluetooth.visibility = View.INVISIBLE
+        }
+        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
+        connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
+        binding.bluetooth.setOnClickListener {
+            val result = setBluetooth()
+
+            if (!result && permissionsDeniedPermanently)
+            {
+                fun Context.openAppSystemSettings() = startActivity(Intent
+                    (Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", packageName, null)))
+            }
+        }
         @RequiresApi(Build.VERSION_CODES.S)
         requestPermissionLauncher =
             registerForActivityResult(
@@ -84,27 +109,9 @@ class ConnectionFragment : Fragment() {
         }
         setBluetooth()
         binding.bluetoothDevices.setOnClickListener{
-            if (scanning)
-                turnScanningOff()
-            else
-                showBLEDevices()
+        toggleScan()
         }
-        val bluetoothManager: BluetoothManager = binding.root.context.applicationContext.
-        getSystemService(BluetoothManager::class.java)
-        bluetoothAdapter = bluetoothManager.adapter
-        val stateObserver = Observer<Boolean> { newState ->
-            binding.bluetooth.isChecked = newState
-            if (!newState)
-                binding.bluetooth.visibility = View.VISIBLE
-            else
-                binding.bluetooth.visibility = View.INVISIBLE
-        }
-        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
-        connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
-        binding.bluetooth.setOnCheckedChangeListener { _, isChecked ->
-            setBluetooth(isChecked)
-        }
-        bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
+        setRecyclerView()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -115,6 +122,14 @@ class ConnectionFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
+    }
+
+    private fun setRecyclerView()
+    {
+        val adapter = BleDevicesAdapter(BleDevicesComparator())
+        binding.availableDevices.adapter = adapter
+        binding.availableDevices.layoutManager = LinearLayoutManager(requireContext())
+        connectionViewModel.BLEDevices.observe(viewLifecycleOwner, adapter::submitList)
     }
 
     private fun checkPermissions(permissions: MutableList<String>)
