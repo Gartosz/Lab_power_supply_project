@@ -35,7 +35,8 @@ class ConnectionFragment : Fragment() {
             binding.bluetooth.visibility = View.INVISIBLE
         }else{
             Toast.makeText(binding.root.context,
-                "Bluetooth is required to be able to connect with arduino module.",
+                "Wymagane jest przyznanie uprawnień " +
+                        "do połączenia i skanowania Bluetooth.",
                 Toast.LENGTH_LONG).show()
             binding.bluetooth.isChecked = false
         }
