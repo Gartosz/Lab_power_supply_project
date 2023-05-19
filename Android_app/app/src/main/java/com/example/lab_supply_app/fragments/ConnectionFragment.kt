@@ -68,28 +68,21 @@ class ConnectionFragment : Fragment() {
             registerForActivityResult(
                 ActivityResultContracts.RequestMultiplePermissions()
             ) { permissions -> permissions.entries.forEach{
-                    val isGranted = it.value
-                    val permission = it.key
-                    if(!isGranted) {
-                        val neverAskAgain = !ActivityCompat.shouldShowRequestPermissionRationale(
-                            requireActivity(),
-                            permission
-                        )
-                        if (neverAskAgain) {
-                            //user click "never ask again"
-                        } else {
-                            //show explain dialog
-                        }
-
-                        Toast.makeText(
-                            binding.root.context, "Wymagane jest przyznanie uprawnień " +
-                                    "do połączenia i skanowania Bluetooth.", Toast.LENGTH_LONG
-                        ).show()
-                        return@registerForActivityResult
-                    }
+                val isGranted = it.value
+                val permission = it.key
+                if(!isGranted) {
+                    Toast.makeText(
+                        binding.root.context, "Wymagany jest dostep do $permission", Toast.LENGTH_LONG
+                    ).show()
+                    val notPermanentlyDenied = ActivityCompat.shouldShowRequestPermissionRationale(
+                        requireActivity(), permission)
+                    if (!permissionsDeniedPermanently)
+                        permissionsDeniedPermanently = !notPermanentlyDenied
                 }
             }
-        setBluetooth(true)
+
+        }
+        setBluetooth()
         binding.bluetoothDevices.setOnClickListener{
             if (scanning)
                 turnScanningOff()
