@@ -1,6 +1,7 @@
 package com.example.lab_supply_app.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
@@ -167,14 +168,30 @@ class ConnectionFragment : Fragment() {
         return permissions.isEmpty()
     }
 
-    private fun showBLEDevices()
+    @SuppressLint("MissingPermission")
+    private fun toggleScan()
     {
+        if(setBluetooth())
+        {
+            connectionViewModel.BLEDevices.value = mutableListOf()
+            binding.availableDevices.adapter?.notifyDataSetChanged()
+            BLEManager = BleManager(bluetoothAdapter, binding.bluetoothDevices,
+                binding.root.context.resources.getStringArray(R.array.devicesList),
+                BLEScanCallback = BleScanCallback {
+                val deviceAddress = it?.device?.address
+                if (deviceAddress.isNullOrBlank()) return@BleScanCallback
 
-    }
-
-    private fun turnScanningOff()
-    {
-
+                if (!connectionViewModel.BLEDevices.value?.contains(deviceAddress)!!) {
+                    val devicesList = connectionViewModel.BLEDevices.value
+                    devicesList?.add(deviceAddress)
+                    connectionViewModel.BLEDevices.value = devicesList
+                    binding.availableDevices.adapter?.notifyItemInserted(
+                        (connectionViewModel.BLEDevices.value?.size!!) - 1
+                    )
+                }
+            })
+            BLEManager.scanBleDevices()
+        }
     }
 
     private fun setBluetooth() : Boolean
