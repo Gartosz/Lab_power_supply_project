@@ -116,12 +116,12 @@ class ConnectionFragment : Fragment() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
+        connectionViewModel.bluetoothState.postValue(verifyBluetooth())
     }
 
     override fun onResume() {
         super.onResume()
-        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
+        connectionViewModel.bluetoothState.postValue(verifyBluetooth())
     }
 
     private fun setRecyclerView()
@@ -171,7 +171,7 @@ class ConnectionFragment : Fragment() {
     {
         if(setBluetooth())
         {
-            connectionViewModel.BLEDevices.value = mutableListOf()
+            connectionViewModel.BLEDevices.postValue(mutableListOf())
             binding.availableDevices.adapter?.notifyDataSetChanged()
             BLEManager = BleManager(bluetoothAdapter, binding.bluetoothDevices,
                 binding.root.context.resources.getStringArray(R.array.devicesList),
@@ -182,7 +182,7 @@ class ConnectionFragment : Fragment() {
                 if (!connectionViewModel.BLEDevices.value?.contains(deviceAddress)!!) {
                     val devicesList = connectionViewModel.BLEDevices.value
                     devicesList?.add(deviceAddress)
-                    connectionViewModel.BLEDevices.value = devicesList
+                    connectionViewModel.BLEDevices.postValue(devicesList)
                     binding.availableDevices.adapter?.notifyItemInserted(
                         (connectionViewModel.BLEDevices.value?.size!!) - 1
                     )
