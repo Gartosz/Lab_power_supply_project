@@ -75,7 +75,7 @@ class ConnectionFragment : Fragment() {
             else
                 binding.bluetooth.visibility = View.INVISIBLE
         }
-        connectionViewModel.bluetoothState.value = bluetoothAdapter.isEnabled
+        connectionViewModel.bluetoothState.value = verifyBluetooth()
         connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
         binding.bluetooth.setOnClickListener {
             val result = setBluetooth()
@@ -100,8 +100,9 @@ class ConnectionFragment : Fragment() {
                     ).show()
                     val notPermanentlyDenied = ActivityCompat.shouldShowRequestPermissionRationale(
                         requireActivity(), permission)
-                    if (!permissionsDeniedPermanently)
+                    if (!permissionsDeniedPermanently) {
                         permissionsDeniedPermanently = !notPermanentlyDenied
+                    }
                 }
             }
 
@@ -193,6 +194,12 @@ class ConnectionFragment : Fragment() {
 
     private fun setBluetooth() : Boolean
     {
+        val verification = requestBluetooth()
+        connectionViewModel.bluetoothState.postValue(verification)
+        return verification
+    }
+
+    private fun requestBluetooth(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val permissions = requiredPermissions.toList().toMutableList()
             requestPermissions(permissions)
@@ -206,5 +213,18 @@ class ConnectionFragment : Fragment() {
         }
         return true
     }
+
+    private fun verifyBluetooth(): Boolean
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val permissions = requiredPermissions.toList().toMutableList()
+            checkPermissions(permissions)
+
+            if (permissions.isNotEmpty())
+                return permissions.isEmpty()
+        }
+        return bluetoothAdapter.isEnabled
+    }
+
 
 }
