@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
 import android.content.pm.PackageManager
@@ -54,6 +53,7 @@ class ConnectionFragment : Fragment() {
         Manifest.permission.BLUETOOTH_CONNECT)
     private var permissionsDeniedPermanently = false
     private lateinit var BLEManager: BleManager
+    private var bluetoothRequest = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,14 +78,8 @@ class ConnectionFragment : Fragment() {
         connectionViewModel.bluetoothState.value = verifyBluetooth()
         connectionViewModel.bluetoothState.observe(viewLifecycleOwner, stateObserver)
         binding.bluetooth.setOnClickListener {
-            val result = setBluetooth()
-
-            if (!result && permissionsDeniedPermanently)
-            {
-                fun Context.openAppSystemSettings() = startActivity(Intent
-                    (Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.fromParts("package", packageName, null)))
-            }
+            bluetoothRequest = true
+            setBluetooth()
         }
         @RequiresApi(Build.VERSION_CODES.S)
         requestPermissionLauncher =
@@ -106,6 +100,13 @@ class ConnectionFragment : Fragment() {
                 }
             }
 
+                if (permissionsDeniedPermanently && bluetoothRequest)
+                {
+                    bluetoothRequest = false
+                    startActivity(Intent
+                        (Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", requireActivity().packageName, null)))
+                }
         }
         setBluetooth()
         binding.bluetoothDevices.setOnClickListener{
