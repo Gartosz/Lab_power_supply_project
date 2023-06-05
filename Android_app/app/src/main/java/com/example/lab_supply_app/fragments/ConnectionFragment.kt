@@ -41,9 +41,7 @@ class ConnectionFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.S)
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
     private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            binding.bluetooth.visibility = View.INVISIBLE
-        }else{
+            if(result.resultCode != RESULT_OK){
             Toast.makeText(binding.root.context,
                 "Wymagane jest przyznanie uprawnień " +
                         "do połączenia i skanowania Bluetooth.",
@@ -72,7 +70,6 @@ class ConnectionFragment : Fragment() {
         getSystemService(BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager.adapter
         val stateObserver = Observer<Boolean> { newState ->
-            binding.bluetooth.isChecked = newState
             if (!newState)
                 binding.bluetooth.visibility = View.VISIBLE
             else
@@ -198,12 +195,11 @@ class ConnectionFragment : Fragment() {
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val permissions = requiredPermissions.toList().toMutableList()
-            if(requestPermissions(permissions))
-                binding.bluetooth.visibility = View.INVISIBLE
-            if(permissions.isNotEmpty())
+            requestPermissions(permissions)
+            if (permissions.isNotEmpty())
                 return permissions.isEmpty()
         }
-        if(!bluetoothAdapter.isEnabled) {
+        if (!bluetoothAdapter.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             requestBluetooth.launch(enableBtIntent)
             return bluetoothAdapter.isEnabled
