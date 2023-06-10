@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.lab_supply_app.databinding.BleDeviceItemBinding
 
-class BleDevicesAdapter (deviceComparator: BleDevicesComparator) : ListAdapter<String, BleDevicesViewHolder>(deviceComparator) {
+class BleDevicesAdapter (deviceComparator: BleDevicesComparator) : ListAdapter<BleDevice, BleDevicesViewHolder>(deviceComparator) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleDevicesViewHolder {
         return BleDevicesViewHolder(
             BleDeviceItemBinding.inflate(

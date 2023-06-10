@@ -26,10 +26,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lab_supply_app.R
-import com.example.lab_supply_app.bluetooth.BleDevicesAdapter
-import com.example.lab_supply_app.bluetooth.BleDevicesComparator
-import com.example.lab_supply_app.bluetooth.BleManager
-import com.example.lab_supply_app.bluetooth.BleScanCallback
+import com.example.lab_supply_app.bluetooth.*
 import com.example.lab_supply_app.databinding.ConnectionLayoutBinding
 import com.example.lab_supply_app.models.ConnectionsViewModel
 
@@ -180,9 +177,9 @@ class ConnectionFragment : Fragment() {
                 val deviceAddress = it?.device?.address
                 if (deviceAddress.isNullOrBlank()) return@BleScanCallback
 
-                if (!connectionViewModel.BLEDevices.value?.contains(deviceAddress)!!) {
+                if (connectionViewModel.BLEDevices.value?.any{ device -> device.address == deviceAddress }!!) {
                     val devicesList = connectionViewModel.BLEDevices.value
-                    devicesList?.add(deviceAddress)
+                    devicesList?.add(BleDevice(it.device.name, deviceAddress))
                     connectionViewModel.BLEDevices.postValue(devicesList)
                     binding.availableDevices.adapter?.notifyItemInserted(
                         (connectionViewModel.BLEDevices.value?.size!!) - 1
