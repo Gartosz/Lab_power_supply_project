@@ -21,14 +21,11 @@ class BleManager(private val bluetoothAdapter: BluetoothAdapter,
         BleScanner = bluetoothAdapter.bluetoothLeScanner
 
         if (isScanning) {
-
-            isScanning = false
-            scanButton.text = textArray[0]
             stopScan(BleScanner)
 
         } else {
             scanButton.text = textArray[1]
-            handler.postDelayed({ stopScan(BleScanner) }, 10000)
+            handler.postDelayed({ stopScan(BleScanner) }, 20000)
 
             isScanning = true
             BleScanner.startScan(BLEScanCallback)
@@ -38,6 +35,8 @@ class BleManager(private val bluetoothAdapter: BluetoothAdapter,
     @SuppressLint("MissingPermission")
     private fun stopScan(BleScanner: BluetoothLeScanner) {
         BleScanner.stopScan(BLEScanCallback)
+        isScanning = false
+        scanButton.text = textArray[0]
         handler.removeCallbacksAndMessages(null)
     }
 }
