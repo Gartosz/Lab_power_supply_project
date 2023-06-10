@@ -171,21 +171,23 @@ class ConnectionFragment : Fragment() {
         {
             connectionViewModel.BLEDevices.postValue(mutableListOf())
             binding.availableDevices.adapter?.notifyDataSetChanged()
-            BLEManager = BleManager(bluetoothAdapter, binding.bluetoothDevices,
-                binding.root.context.resources.getStringArray(R.array.devicesList),
-                BLEScanCallback = BleScanCallback {
-                val deviceAddress = it?.device?.address
-                if (deviceAddress.isNullOrBlank()) return@BleScanCallback
-
-                if (connectionViewModel.BLEDevices.value?.any{ device -> device.address == deviceAddress }!!) {
-                    val devicesList = connectionViewModel.BLEDevices.value
-                    devicesList?.add(BleDevice(it.device.name, deviceAddress))
-                    connectionViewModel.BLEDevices.postValue(devicesList)
-                    binding.availableDevices.adapter?.notifyItemInserted(
-                        (connectionViewModel.BLEDevices.value?.size!!) - 1
-                    )
-                }
-            })
+            if(!this::BLEManager.isInitialized) {
+                BLEManager = BleManager(bluetoothAdapter, binding.bluetoothDevices,
+                    binding.root.context.resources.getStringArray(R.array.devicesList),
+                    BLEScanCallback = BleScanCallback {
+                        val deviceAddress = it?.device?.address
+                        if (deviceAddress.isNullOrBlank())
+                            return@BleScanCallback
+                        else if (!connectionViewModel.BLEDevices.value?.any { device -> device.address == deviceAddress }!!) {
+                            val devicesList = connectionViewModel.BLEDevices.value
+                            devicesList?.add(BleDevice(it.device.name, deviceAddress))
+                            connectionViewModel.BLEDevices.postValue(devicesList)
+                            binding.availableDevices.adapter?.notifyItemInserted(
+                                (connectionViewModel.BLEDevices.value?.size!!) - 1
+                            )
+                        }
+                    })
+            }
             BLEManager.scanBleDevices()
         }
     }
