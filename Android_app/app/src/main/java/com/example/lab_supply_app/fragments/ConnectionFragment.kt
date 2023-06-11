@@ -110,6 +110,11 @@ class ConnectionFragment : Fragment() {
         toggleScan()
         }
         setRecyclerView()
+        ConnectedDevice.connectedDevice.observe(viewLifecycleOwner) {
+            binding.connectionStatus.text = if (ConnectedDevice.connectedDevice.value?.second != "")
+                "Connected" else "Disconnected"
+            binding.deviceName.text = ConnectedDevice.connectedDevice.value?.first
+        }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -225,6 +230,5 @@ class ConnectionFragment : Fragment() {
         }
         return bluetoothAdapter.isEnabled
     }
-
 
 }

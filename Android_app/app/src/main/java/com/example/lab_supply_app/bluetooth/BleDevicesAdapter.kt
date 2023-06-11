@@ -17,6 +17,9 @@ class BleDevicesAdapter (deviceComparator: BleDevicesComparator) : ListAdapter<B
     override fun onBindViewHolder(holder: BleDevicesViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+        holder.itemView.setOnClickListener {
+            ConnectedDevice.handleDeviceUpdate(item.name, item.address)
+        }
     }
 
 }
