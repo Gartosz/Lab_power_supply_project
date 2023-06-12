@@ -148,6 +148,15 @@ class ConnectionFragment : Fragment() {
                 "Connected" else "Disconnected"
             binding.deviceName.text = ConnectedDevice.connectedDevice.value?.first
         }
+        binding.connectionStatus.setOnLongClickListener {
+            removeConnection()
+            return@setOnLongClickListener true
+        }
+    }
+
+    private fun useDevice(it: Pair<String, String>) {
+        setConnection()
+        binding.deviceName.text = it.first
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -218,7 +227,9 @@ class ConnectionFragment : Fragment() {
                             return@BleScanCallback
                         else if (!connectionViewModel.BLEDevices.value?.any { device -> device.address == deviceAddress }!!) {
                             val devicesList = connectionViewModel.BLEDevices.value
-                            devicesList?.add(BleDevice(it.device.name, deviceAddress))
+                            val deviceName = if(it.device.name.isNullOrEmpty()) "Unnamed"
+                            else it.device.name
+                            devicesList?.add(BleDevice(deviceName, deviceAddress))
                             connectionViewModel.BLEDevices.postValue(devicesList)
                             binding.availableDevices.adapter?.notifyItemInserted(
                                 (connectionViewModel.BLEDevices.value?.size!!) - 1
