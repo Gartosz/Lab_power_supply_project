@@ -275,4 +275,23 @@ class ConnectionFragment : Fragment() {
         return bluetoothAdapter.isEnabled
     }
 
+    private fun setConnection()
+    {
+        bluetoothService?.let { bluetooth ->
+            if (bluetooth.setAdapter(bluetoothAdapter)
+                && (!ConnectedDevice.getAddress().isNullOrEmpty())
+            ) {
+                bluetooth.connect(ConnectedDevice.getAddress()!!)
+            }
+
+            else
+                ConnectedDevice.reset()
+        }
+    }
+    private fun removeConnection()
+    {
+        ConnectedDevice.reset()
+        bluetoothService?.close()
+    }
+
 }
