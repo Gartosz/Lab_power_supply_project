@@ -144,9 +144,16 @@ class ConnectionFragment : Fragment() {
         }
         setRecyclerView()
         ConnectedDevice.connectedDevice.observe(viewLifecycleOwner) {
-            binding.connectionStatus.text = if (ConnectedDevice.connectedDevice.value?.second != "")
-                "Connected" else "Disconnected"
-            binding.deviceName.text = ConnectedDevice.connectedDevice.value?.first
+            if(bluetoothService == null && it.second.isNotEmpty())
+            {
+                val gattServiceIntent = Intent(binding.root.context, BleService::class.java)
+                requireContext().applicationContext.bindService(gattServiceIntent, serviceConnection,
+                                                 Context.BIND_AUTO_CREATE)
+            }
+            else if (bluetoothService != null && !ConnectedDevice.getAddress().isNullOrEmpty()) {
+                useDevice(it)
+            }
+            binding.deviceName.text = it.first
         }
         binding.connectionStatus.setOnLongClickListener {
             removeConnection()
