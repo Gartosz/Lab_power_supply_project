@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothProfile
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
@@ -24,6 +25,7 @@ class BleService(): Service() {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
+        close()
         return super.onUnbind(intent)
     }
 
@@ -66,5 +68,38 @@ class BleService(): Service() {
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
+    fun connect(address: String) {
+        if (bluetoothAdapter?.isEnabled == true && address != bluetoothGatt?.device?.address) {
+            bluetoothAdapter.let { adapter ->
+                try {
+                    connectMessage.value = "CONNECTING"
+                    val device = adapter?.getRemoteDevice(address)
+                    device?.connectGatt(this, false, bluetoothGattCallback)
+                } catch (error: Exception) {
+                    connectMessage.value = "DISCONNECTED"
+                    Log.e("GATT_CONNECT", error.toString())
+                }
+            }
+        }
+    }
+
+
+        @SuppressLint("MissingPermission")
+        fun close() {
+            try {
+                connectMessage.value = "DISCONNECTING"
+                bluetoothGatt?.let { gatt ->
+                    gatt.disconnect()
+                    gatt.close()
+                }
+            } catch (error: Exception) {
+                Log.e("GATT_DISCONNECT", error.toString())
+            } finally {
+                connectMessage.value = "DISCONNECTED"
+                bluetoothGatt = null
+            }
+        }
 
 }
