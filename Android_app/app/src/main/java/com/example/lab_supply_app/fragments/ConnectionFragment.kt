@@ -5,12 +5,16 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -23,12 +27,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.lab_supply_app.R
 import com.example.lab_supply_app.bluetooth.*
 import com.example.lab_supply_app.databinding.ConnectionLayoutBinding
 import com.example.lab_supply_app.models.ConnectionsViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class ConnectionFragment : Fragment() {
     private lateinit var binding: ConnectionLayoutBinding
@@ -52,6 +62,29 @@ class ConnectionFragment : Fragment() {
     private lateinit var BLEManager: BleManager
     private var bluetoothRequest = false
 
+    private var bluetoothService : BleService? = null
+    private var observeStateFlow : Job? = null
+    private val serviceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(
+            componentName: ComponentName,
+            service: IBinder
+        ) {
+            bluetoothService = (service as BleService.LocalBinder).getService()
+            observeStateFlow = lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    bluetoothService?.connectMessage?.collect() {
+                        binding.connectionStatus.text = it
+                    }
+                }
+            }
+            ConnectedDevice.connectedDevice.value?.let { useDevice(it) }
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+            observeStateFlow?.cancel("Service disconnected")
+            bluetoothService = null
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
