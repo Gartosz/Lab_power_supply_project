@@ -23,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab_supply_app"
         tools:targetApi="33">
+        <service android:name=".bluetooth.BleService" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
