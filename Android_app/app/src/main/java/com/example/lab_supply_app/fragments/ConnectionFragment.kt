@@ -62,17 +62,30 @@ class ConnectionFragment : Fragment() {
     private lateinit var BLEManager: BleManager
     private var bluetoothRequest = false
     private var bluetoothService : BleService? = null
-    private var observeStateFlow : Job? = null
+    private var observeConnection : Job? = null
+    private var observeServices : Job? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(
             componentName: ComponentName,
             service: IBinder
         ) {
             bluetoothService = (service as BleService.LocalBinder).getService()
-            observeStateFlow = lifecycleScope.launch {
+            observeConnection = lifecycleScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     bluetoothService?.connectMessage?.collect() {
                         binding.connectionStatus.text = it
+                    }
+                }
+            }
+            observeServices = lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    bluetoothService?.data?.collect() {
+                        it.forEach { service ->
+                            service.characteristics.forEach { characteristic ->
+                                bluetoothService?.readCharacteristic(characteristic)
+                            }
+
+                        }
                     }
                 }
             }
@@ -80,7 +93,8 @@ class ConnectionFragment : Fragment() {
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
-            observeStateFlow?.cancel("Service disconnected")
+            observeConnection?.cancel("Service disconnected")
+            observeServices?.cancel("Service disconnected")
             bluetoothService = null
         }
     }

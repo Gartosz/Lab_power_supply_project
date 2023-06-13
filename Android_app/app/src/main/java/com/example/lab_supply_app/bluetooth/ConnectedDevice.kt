@@ -1,10 +1,11 @@
 package com.example.lab_supply_app.bluetooth
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
 
 object ConnectedDevice {
     val connectedDevice = MutableLiveData(Pair("", ""))
-    //val
+    val current = MutableStateFlow(0.0f)
 
     fun handleDeviceUpdate(name: String, address: String)
     {
