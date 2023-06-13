@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 object ConnectedDevice {
     val connectedDevice = MutableLiveData(Pair("", ""))
-    val current = MutableStateFlow(0.0f)
+    val current = MutableStateFlow("0.00")
 
     fun handleDeviceUpdate(name: String, address: String)
     {

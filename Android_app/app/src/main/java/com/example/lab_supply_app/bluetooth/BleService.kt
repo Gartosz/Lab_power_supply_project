@@ -65,6 +65,17 @@ class BleService(): Service() {
         }
     }
 
+    private fun bytesToString(value: ByteArray): String
+    {
+        val array = ByteBuffer.wrap(value).array()
+        var result = ""
+        for (i in array) {
+            result += i.toInt().toChar()
+        }
+
+        return result
+    }
+
 
     private val bluetoothGattCallback = object : BluetoothGattCallback() {
 
@@ -105,7 +116,6 @@ class BleService(): Service() {
             }
         }
 
-
         override fun onCharacteristicRead(
             gatt: BluetoothGatt,
             characteristic: BluetoothGattCharacteristic,
@@ -114,7 +124,7 @@ class BleService(): Service() {
         ) {
             super.onCharacteristicRead(gatt, characteristic, value, status)
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                println("AAA" + ByteBuffer.wrap(value).float)
+                ConnectedDevice.current.value = bytesToString(value)
             }
         }
         @Deprecated("Deprecated in Java")
@@ -125,7 +135,7 @@ class BleService(): Service() {
         ) {
             super.onCharacteristicRead(gatt, characteristic, status)
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                println("BBB" + ByteBuffer.wrap(characteristic.value).float)
+                ConnectedDevice.current.value = bytesToString(characteristic.value)
             }
         }
 
@@ -135,25 +145,7 @@ class BleService(): Service() {
             characteristic: BluetoothGattCharacteristic
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
-            println(characteristic.uuid.toString())
-            gatt?.services?.forEach { svc ->
-                svc.characteristics.map { char ->
-                    if (char.uuid.toString() == characteristic.uuid.toString()) {
-                        println(characteristic.value)
-                    } else
-                        char
-                }
-            }
-
-            println("CCC" + ByteBuffer.wrap(characteristic.value).toString())
-            val array = ByteBuffer.wrap(characteristic.value).array()
-            var result = 0
-            for (i in array.indices) {
-                println(array[i])
-                result += array[i].toInt().toChar().toInt() * (10.0f.pow(i)).toInt()
-            }
-
-            println(result)
+            ConnectedDevice.current.value = bytesToString(characteristic.value)
         }
 
         override fun onCharacteristicChanged(
@@ -162,7 +154,7 @@ class BleService(): Service() {
             value: ByteArray
         ) {
             super.onCharacteristicChanged(gatt, characteristic, value)
-            println("DDD" + ByteBuffer.wrap(value).float)
+            ConnectedDevice.current.value = bytesToString(value)
         }
 
         override fun onDescriptorWrite(
@@ -178,25 +170,24 @@ class BleService(): Service() {
         suspend fun enableNotificationsAndIndications() {
 
             bluetoothGatt?.services?.forEach { gattSvcForNotify ->
-                gattSvcForNotify.characteristics?.forEach { svcChar ->
+                gattSvcForNotify.characteristics?.forEach { chracteristic ->
 
-                    svcChar.descriptors.find { desc ->
-                        desc.uuid.toString() == CCCD.uuid
-                    }?.also { cccd ->
+                    chracteristic.descriptors.find { desc ->
+                        desc.uuid.toString() == BleServicesData.uuid
+                    }?.also { data ->
                         val notifyRegistered =
-                            bluetoothGatt?.setCharacteristicNotification(svcChar, true)
+                            bluetoothGatt?.setCharacteristicNotification(chracteristic, true)
 
-                        if (svcChar.properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY > 0) {
-                            cccd.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
-                            bluetoothGatt?.writeDescriptor(cccd)
+                        if (chracteristic.properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY > 0) {
+                            data.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+                            bluetoothGatt?.writeDescriptor(data)
                         }
 
-                        if (svcChar.properties and BluetoothGattCharacteristic.PROPERTY_INDICATE > 0) {
-                            cccd.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE)
-                            bluetoothGatt?.writeDescriptor(cccd)
+                        if (chracteristic.properties and BluetoothGattCharacteristic.PROPERTY_INDICATE > 0) {
+                            data.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE)
+                            bluetoothGatt?.writeDescriptor(data)
                         }
 
-                        // give gatt a little breathing room for writes
                         delay(300L)
 
                     }

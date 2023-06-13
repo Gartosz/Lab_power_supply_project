@@ -5,6 +5,7 @@
     <string name="connection">Connect to device</string>
     <string name="request_bluetooth">Request Bluetooth</string>
     <string name="default_connection_status">DISCONNECTED</string>
+    <string name="left_column">Current readout</string>
     <array name="devicesList">
         <item>SCAN BLE DEVICES</item>
         <item>TURN OFF SCANNER</item>
