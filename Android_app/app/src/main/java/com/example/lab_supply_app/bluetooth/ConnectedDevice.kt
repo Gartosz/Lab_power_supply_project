@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 
 object ConnectedDevice {
     val connectedDevice = MutableLiveData(Pair("", ""))
+    //val
 
     fun handleDeviceUpdate(name: String, address: String)
     {

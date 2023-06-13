@@ -5,12 +5,14 @@ import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothProfile
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 
 class BleService(): Service() {
@@ -19,6 +21,7 @@ class BleService(): Service() {
     private var bluetoothGatt: BluetoothGatt? = null
     private var bluetoothAdapter: BluetoothAdapter? = null
     val connectMessage = MutableStateFlow("DISCONNECTED")
+    val data = MutableStateFlow<List<ByteArray>>(listOf())
 
     override fun onBind(intent: Intent): IBinder {
         return binder
@@ -67,6 +70,29 @@ class BleService(): Service() {
                 else -> connectMessage.value = "UNKNOWN"
             }
         }
+
+        override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+            super.onServicesDiscovered(gatt, status)
+
+//            scope.launch {
+//                deviceDetails.value = emptyList()
+//                gatt?.let {
+//                    deviceDetails.value = parseService(it, status)
+//                    enableNotificationsAndIndications()
+//                }
+//            }
+        }
+
+        override fun onCharacteristicRead(
+            gatt: BluetoothGatt,
+            characteristic: BluetoothGattCharacteristic,
+            status: Int
+        ) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                println(characteristic)
+            }
+        }
+
     }
 
     @SuppressLint("MissingPermission")

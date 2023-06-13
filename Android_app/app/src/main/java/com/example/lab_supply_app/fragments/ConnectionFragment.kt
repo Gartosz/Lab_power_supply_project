@@ -61,7 +61,6 @@ class ConnectionFragment : Fragment() {
     private var permissionsDeniedPermanently = false
     private lateinit var BLEManager: BleManager
     private var bluetoothRequest = false
-
     private var bluetoothService : BleService? = null
     private var observeStateFlow : Job? = null
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
