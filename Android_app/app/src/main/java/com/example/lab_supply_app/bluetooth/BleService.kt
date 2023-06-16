@@ -103,7 +103,6 @@ class BleService(): Service() {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
             super.onServicesDiscovered(gatt, status)
-            println("ooo")
             if (status == BluetoothGatt.GATT_SUCCESS)
             {
                 scope.launch {

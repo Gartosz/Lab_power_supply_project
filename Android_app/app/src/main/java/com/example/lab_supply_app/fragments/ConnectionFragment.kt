@@ -73,7 +73,14 @@ class ConnectionFragment : Fragment() {
             observeConnection = lifecycleScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     bluetoothService?.connectMessage?.collect() {
+                        println("ASD")
                         binding.connectionStatus.text = it
+                        if (it == "DISCONNECTED") {
+                            ConnectedDevice.connectedDevice.postValue(Pair("", ""))
+                            if (ConnectedDevice.current.value != "")
+                                ConnectedDevice.current.value = "CONNECTION ERROR"
+                            println("yś")
+                        }
                     }
                 }
             }

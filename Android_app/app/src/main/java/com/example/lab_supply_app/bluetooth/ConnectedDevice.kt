@@ -4,8 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.MutableStateFlow
 
 object ConnectedDevice {
+    val bluetoothState = MutableStateFlow(false)
     val connectedDevice = MutableLiveData(Pair("", ""))
-    val current = MutableStateFlow("0.00")
+    val current = MutableStateFlow("")
 
     fun handleDeviceUpdate(name: String, address: String)
     {
