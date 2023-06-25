@@ -17,16 +17,21 @@ String bleString = "";
 
 //set variables
 int manualCurrentPin = A3;
+int buttonPin = A0;
 int pwmPin = 3;
 int pwmValue = 0;
 const int interval = 200;
+const int changeTime = 1500;
 unsigned long prevMs = 0;
+unsigned long holdStart = 0;
 float expected = 20.0;
+bool appControl = false;
 
 void setup(void) 
 {
   //set pin modes
   pinMode(manualCurrentPin, INPUT);
+  pinMode(buttonPin, INPUT);
   pinMode(pwmPin, OUTPUT);
 
   //set 2nd timer (pins 3 & 11) to 31,4 kHz
@@ -126,6 +131,18 @@ void loop(void)
 
   analogWrite(pwmPin,pwmValue);
 
+  //change source of expected current
+  if(analogRead(buttonPin) > 1000 && holdStart == 0)
+      holdStart = currentMs; 
+  else if(analogRead(buttonPin) < 100)
+  {
+    if(currentMs - holdStart >= changeTime && holdStart != 0)
+      appControl = !appControl;
+    holdStart = 0;
+  }
+  
+  //set expected got from potentiometer
+  if(!appControl)
     expected = analogRead(potentiometer)/10.2;
 
 
