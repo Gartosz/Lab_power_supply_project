@@ -126,6 +126,7 @@ void loop(void)
 
   analogWrite(pwmPin,pwmValue);
 
+    expected = analogRead(potentiometer)/10.2;
 
 
 }
