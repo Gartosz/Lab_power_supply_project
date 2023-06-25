@@ -145,5 +145,11 @@ void loop(void)
   if(!appControl)
     expected = analogRead(potentiometer)/10.2;
 
+  //read value received by AT09
+  while (bleModule.available()){
+    float value = bleModule.readString().toFloat();
 
+    if(appControl)
+    expected = constrain(value, 0.00, 100.00);
+  }
 }
