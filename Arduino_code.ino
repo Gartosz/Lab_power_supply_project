@@ -1,12 +1,20 @@
 #include <Wire.h>
 #include <Adafruit_INA219.h>
 #include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
+
 //initialize current sensor
 Adafruit_INA219 ina219;
 //lcd display pins
 const int rs = 12, en = 10, d4 = 6, d5 = 7, d6 = 9, d7 = 8; 
+
 //initialize lcd display
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+//initialize at09
+SoftwareSerial bleModule(5, 4);
+String bleString = "";
+
 //set variables
 int manualCurrentPin = A3;
 int pwmPin = 3;
@@ -31,6 +39,10 @@ void setup(void)
   delay(100);
   Serial.begin(115200);
 
+  //start serial connection to ble module
+  bleModule.begin(9600);
+  delay(100);
+
   Serial.println("Start!");
 
   //begin INA219 operations and set mode
@@ -39,6 +51,39 @@ void setup(void)
     while (1) { delay(10); }
   }
   ina219.setCalibration_16V_400mA();
+
+  //set AT09 properties
+  bleCmd("AT+NAMELabPSU","Device Name: ");
+  bleCmd("AT+LADDR","Address: "); // printout BLE address
+  bleCmd("AT+UUID0xFFE0","Address: "); // UUID
+  bleCmd("AT+CHAR0xFFE1","Char UUID: "); // printout character UUID
+  bleCmd("AT+ROLE0","Role: ");
+  bleCmd("AT+VERSION","Version: "); // module version  
+  bleCmd("AT+RESET",""); // reset BLE module
+  bleString = "";
+  Serial.println("Measuring voltage and current with INA219 ...");
+}
+
+String bleCmd(String command,String responseStringPrefix){
+  bleString = "";
+  unsigned long t1 = millis();
+  bleModule.println(command);
+  while (true){
+    char receivedCharacter = bleModule.read();
+    if (int(receivedCharacter)==-1 or int(receivedCharacter)==42){
+      if ((millis()-t1)>2000){ // 2 second timeout
+        return "Err";
+      }
+      continue;
+    }
+    if (receivedCharacter=='\n'){
+      Serial.print("Bluetooth "+responseStringPrefix);
+      Serial.println(bleString.substring(0,bleString.length()));
+      return bleString;
+    }
+    bleString+=receivedCharacter;
+  }
+}
 
 void loop(void) 
 {
@@ -68,7 +113,7 @@ void loop(void)
     lcd.print("I_s = " + String(expected) + " mA");
     lcd.setCursor(0, 1);
     lcd.print("I_m = " + String(current_mA) + " mA");
-    ble_module.println(current_mA);
+    bleModule.println(current_mA);
   
   }
 
